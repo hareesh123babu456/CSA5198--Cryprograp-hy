@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+void vigenereEncrypt(char plaintext[], char keyword[], char ciphertext[]) {
+    int i, j;
+
+    int plaintextLen = strlen(plaintext);
+    int keywordLen = strlen(keyword);
+
+    for (i = 0, j = 0; i < plaintextLen; ++i, ++j) {
+        if (j == keywordLen)
+            j = 0;
+        if (plaintext[i] >= 'A' && plaintext[i] <= 'Z') {
+            ciphertext[i] = ((plaintext[i] - 'A' + keyword[j] - 'A') % 26) + 'A';
+        }
+        else if (plaintext[i] >= 'a' && plaintext[i] <= 'z') {
+            ciphertext[i] = ((plaintext[i] - 'a' + keyword[j] - 'A') % 26) + 'a';
+        }
+        else {
+            ciphertext[i] = plaintext[i];
+            --j; 
+        }
+    }
+    ciphertext[i] = '\0';
+}
+void vigenereDecrypt(char ciphertext[], char keyword[], char decryptedText[]) {
+    int i, j;
+
+    int ciphertextLen = strlen(ciphertext);
+    int keywordLen = strlen(keyword);
+
+    for (i = 0, j = 0; i < ciphertextLen; ++i, ++j) {
+        if (j == keywordLen)
+            j = 0;
+        if (ciphertext[i] >= 'A' && ciphertext[i] <= 'Z') {
+            decryptedText[i] = ((ciphertext[i] - 'A' - (keyword[j] - 'A') + 26) % 26) + 'A';
+        }
+        else if (ciphertext[i] >= 'a' && ciphertext[i] <= 'z') {
+            decryptedText[i] = ((ciphertext[i] - 'a' - (keyword[j] - 'A') + 26) % 26) + 'a';
+        }
+        else {
+            decryptedText[i] = ciphertext[i];
+            --j;
+        }
+    }
+    decryptedText[i] = '\0';
+}
+
+int main() {
+    int choice;
+    char input[100], keyword[100], output[100];
+
+    while (1) {
+        printf("\nVigenere Cipher Menu:\n");
+        printf("1. Encipher\n");
+        printf("2. Decipher\n");
+        printf("3. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        getchar();
+
+        switch (choice) {
+            case 1:
+                printf("Enter the plaintext: ");
+                fgets(input, sizeof(input), stdin);
+                printf("Enter the keyword: ");
+                fgets(keyword, sizeof(keyword), stdin);
+
+                strtok(input, "\n");
+                strtok(keyword, "\n");
+
+                vigenereEncrypt(input, keyword, output);
+                printf("Encrypted Text: %s\n", output);
+                break;
+
+            case 2:
+                printf("Enter the ciphertext: ");
+                fgets(input, sizeof(input), stdin);
+                printf("Enter the keyword: ");
+                fgets(keyword, sizeof(keyword), stdin);
+
+                strtok(input, "\n");
+                strtok(keyword, "\n");
+
+                
+                vigenereDecrypt(input, keyword, output);
+                printf("Decrypted Text: %s\n", output);
+                break;
+
+            case 3:
+                printf("Exiting the program.\n");
+                exit(0);
+
+            default:
+                printf("Invalid choice. Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
